@@ -49,10 +49,12 @@ const filterRecord = (
 };
 
 const OctopusJitsiModule: FC<{ store: any }> = ({ store }) => {
+  const [storeState, setStoreState] = useState<any>(store.getState());
   const [counter, setCounter] = useState(0);
   const [profileInputVisible, setProfileInputVisible] = useState(false);
   useEffect(() => {
     const domObserver = new MutationObserver((mr) => {
+      // Dummy mutation observer actions
       filterRecord(
         mr,
         "#setDisplayName",
@@ -78,11 +80,15 @@ const OctopusJitsiModule: FC<{ store: any }> = ({ store }) => {
       subtree: true,
       childList: true,
     });
-
+    const storeObserver = store.subscribe(() =>
+      setStoreState(store.getState())
+    );
     return () => {
       domObserver.disconnect();
+      storeObserver();
     };
   }, []);
+
   return (
     <div
       style={{
@@ -94,16 +100,59 @@ const OctopusJitsiModule: FC<{ store: any }> = ({ store }) => {
         zIndex: "1000",
       }}
     >
-      <pre>
-        {JSON.stringify(
-          {
-            "Mutation Count": counter,
-            "Profile Input Visible?": profileInputVisible,
-          },
-          null,
-          2
-        )}
-      </pre>
+      <div>
+        <pre>
+          {JSON.stringify(
+            {
+              "Mutation Count": counter,
+              "Profile Input Visible?": profileInputVisible,
+              "In meeting?": storeState["features/base/conference"].room
+                ? "yes"
+                : "no",
+              "Setting - Hide self?":
+                storeState["features/base/settings"].disableSelfView,
+              ...(storeState["features/base/conference"].room
+                ? { "Room name": storeState["features/base/conference"].room }
+                : {}),
+              ...(() => {
+                const participants =
+                  storeState["features/base/conference"].conference
+                    ?.participants;
+                const participantList = participants
+                  ? Object.keys(participants).map((k) => {
+                      return {
+                        name: participants[k]._displayName,
+                        id: participants[k]._id,
+                        jid: participants[k]._jid,
+                        role: participants[k]._role,
+                      };
+                    })
+                  : null;
+                return participantList
+                  ? { "Participant list": participantList }
+                  : {};
+              })(),
+            },
+            null,
+            2
+          )}
+        </pre>
+      </div>
+      <div>
+        <button
+          onClick={() => {
+            store.dispatch({
+              type: "SETTINGS_UPDATED",
+              settings: {
+                disableSelfView:
+                  !storeState["features/base/settings"].disableSelfView,
+              },
+            });
+          }}
+        >
+          Toggle self view
+        </button>
+      </div>
     </div>
   );
 };
