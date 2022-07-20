@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
+import { Mutation, useMutations } from "./mutations";
 
 /*
   This function is used instead of querySelectorAll because
@@ -26,9 +27,7 @@ const nodeListSelector = (nl: NodeList, selector: string): Element[] => {
 
 const filterRecord = (
   mr: MutationRecord[],
-  selector: string,
-  mountCallback?: (record: Element[]) => void,
-  unmountCallback?: (record: Element[]) => void
+  { selector, mountCallback, unmountCallback }: Mutation
 ) => {
   if (mountCallback) {
     mr.forEach((m) => {
@@ -50,31 +49,12 @@ const filterRecord = (
 
 const OctopusJitsiModule: FC<{ store: any }> = ({ store }) => {
   const [storeState, setStoreState] = useState<any>(store.getState());
-  const [counter, setCounter] = useState(0);
-  const [profileInputVisible, setProfileInputVisible] = useState(false);
+  const mutationList = useMutations(storeState);
   useEffect(() => {
     const domObserver = new MutationObserver((mr) => {
-      // Dummy mutation observer actions
-      filterRecord(
-        mr,
-        "#setDisplayName",
-        (e) => {
-          setProfileInputVisible(true);
-          (e[0] as HTMLElement).style.padding = "20px";
-        },
-        () => {
-          setProfileInputVisible(false);
-        }
-      );
-      filterRecord(mr, ".mock-atlaskit-label", (el) => {
-        el.forEach((e) => {
-          (e as HTMLElement).style.background = "blue";
-          e.addEventListener("click", function () {
-            alert("Clicked on text on Settings Modal");
-          });
-        });
+      mutationList.forEach((mutation) => {
+        filterRecord(mr, mutation);
       });
-      setCounter((prev) => prev + 1);
     });
     domObserver.observe(document.body, {
       subtree: true,
@@ -89,72 +69,7 @@ const OctopusJitsiModule: FC<{ store: any }> = ({ store }) => {
     };
   }, []);
 
-  return (
-    <div
-      style={{
-        position: "absolute",
-        top: "0",
-        backgroundColor: "#00000088",
-        padding: "20px",
-        color: "white",
-        zIndex: "1000",
-      }}
-    >
-      <div>
-        <pre>
-          {JSON.stringify(
-            {
-              "Mutation Count": counter,
-              "Profile Input Visible?": profileInputVisible,
-              "In meeting?": storeState["features/base/conference"].room
-                ? "yes"
-                : "no",
-              "Setting - Hide self?":
-                storeState["features/base/settings"].disableSelfView,
-              ...(storeState["features/base/conference"].room
-                ? { "Room name": storeState["features/base/conference"].room }
-                : {}),
-              ...(() => {
-                const participants =
-                  storeState["features/base/conference"].conference
-                    ?.participants;
-                const participantList = participants
-                  ? Object.keys(participants).map((k) => {
-                      return {
-                        name: participants[k]._displayName,
-                        id: participants[k]._id,
-                        jid: participants[k]._jid,
-                        role: participants[k]._role,
-                      };
-                    })
-                  : null;
-                return participantList
-                  ? { "Participant list": participantList }
-                  : {};
-              })(),
-            },
-            null,
-            2
-          )}
-        </pre>
-      </div>
-      <div>
-        <button
-          onClick={() => {
-            store.dispatch({
-              type: "SETTINGS_UPDATED",
-              settings: {
-                disableSelfView:
-                  !storeState["features/base/settings"].disableSelfView,
-              },
-            });
-          }}
-        >
-          Toggle self view
-        </button>
-      </div>
-    </div>
-  );
+  return null;
 };
 
 export default OctopusJitsiModule;
