@@ -1,4 +1,4 @@
-import OctopusJitsiModule from "./OctopusJitsiModule";
+import PurpieJitsiModule from "./PurpieJitsiModule";
 
 
-export default OctopusJitsiModule;
+export default PurpieJitsiModule;

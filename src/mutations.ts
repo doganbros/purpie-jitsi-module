@@ -12,7 +12,7 @@ const data = {
   zoneName: "Test Zone",
   channelName: "Test Channel",
   watermarkHref: "https://doganbros.com",
-  watermarkAria: "Octopus Watermark, Link to the Octopus Test Zone",
+  watermarkAria: "Purpie Watermark, Link to the Purpie Test Zone",
   avatarBgColor: "#966AEA",
   avatarFgColor: "#99FF69",
 };

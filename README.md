@@ -1,1 +1,1 @@
-# octopus-jitsi-module
+# purpie-jitsi-module

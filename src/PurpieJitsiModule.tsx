@@ -47,7 +47,7 @@ const filterRecord = (
   }
 };
 
-const OctopusJitsiModule: FC<{ store: any }> = ({ store }) => {
+const PurpieJitsiModule: FC<{ store: any }> = ({ store }) => {
   const [storeState, setStoreState] = useState<any>(store.getState());
   const mutationList = useMutations(storeState);
   useEffect(() => {
@@ -72,4 +72,4 @@ const OctopusJitsiModule: FC<{ store: any }> = ({ store }) => {
   return null;
 };
 
-export default OctopusJitsiModule;
+export default PurpieJitsiModule;
