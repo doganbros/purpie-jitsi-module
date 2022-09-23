@@ -1,19 +1,19 @@
 {
-  "name": "octopus-jitsi-module",
+  "name": "purpie-jitsi-module",
   "private": true,
   "version": "1.0.0",
-  "description": "Jitsi octopus react module",
+  "description": "Jitsi Purpie React module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mkhstar/octopus-jitsi-module"
+    "url": "https://github.com/doganbros/purpie-jitsi-module"
   },
   "main": "dist/index.js",
   "scripts": {
     "build": "rm -rf ./dist && tsc",
     "prepare": "npm run build",
-    "copy": "rm -rf ./build && tsc --outDir build && rm -rf ../octopus-jitsi-meet/node_modules/octopus-jitsi-module/dist && cp -r build ../octopus-jitsi-meet/node_modules/octopus-jitsi-module/dist"
+    "copy": "rm -rf ./build && tsc --outDir build && rm -rf ../purpie-jitsi-meet/node_modules/purpie-jitsi-module/dist && cp -r build ../purpie-jitsi-meet/node_modules/purpie-jitsi-module/dist"
   },
-  "author": "Kusi Musah Hussein",
+  "author": "Fecri Kaan Ulubey",
   "license": "MIT",
   "peerDependencies": {
     "react": "^16.9.0 || ^17.0.0",
