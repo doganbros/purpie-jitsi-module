@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { useInitEffects } from "./effects";
+import { setupStoreListeners } from "./storeListeners";
 import { Mutation, useMutations } from "./mutations";
 
 /*
@@ -50,7 +50,6 @@ const filterRecord = (
 
 const PurpieJitsiModule: FC<{ store: any }> = ({ store }) => {
   const mutationList = useMutations(store);
-  useInitEffects(store);
   useEffect(() => {
     const domObserver = new MutationObserver((mr) => {
       mutationList.forEach((mutation) => {
@@ -61,7 +60,7 @@ const PurpieJitsiModule: FC<{ store: any }> = ({ store }) => {
       subtree: true,
       childList: true,
     });
-
+    setupStoreListeners(store);
     return () => {
       domObserver.disconnect();
     };
