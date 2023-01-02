@@ -42,8 +42,7 @@ const setupAutoRecording = (store: any) => {
       });
       storeObserver();
       conference.startRecording({
-        mode: "STREAM",
-        streamId: conference.options.name,
+        mode: "FILE",
       });
     }
   };
