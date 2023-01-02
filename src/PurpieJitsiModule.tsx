@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useState } from "react";
-import { setupStoreListeners } from "./storeListeners";
+import React, { FC, useEffect } from "react";
+import { initAutomations } from "./automations";
 import { Mutation, useMutations } from "./mutations";
 
 /*
@@ -60,7 +60,7 @@ const PurpieJitsiModule: FC<{ store: any }> = ({ store }) => {
       subtree: true,
       childList: true,
     });
-    setupStoreListeners(store);
+    initAutomations(store);
     return () => {
       domObserver.disconnect();
     };
