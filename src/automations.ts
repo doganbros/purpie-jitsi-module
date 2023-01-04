@@ -20,7 +20,7 @@ const getHashParam = (param: string) => {
   }
 };
 
-const setupAutoRecording = (store: any) => {
+const setupAutoRecording = (store: any, mode: "file" | "stream") => {
   let storeObserver: any;
 
   const tryGetConference = () => {
@@ -41,9 +41,16 @@ const setupAutoRecording = (store: any) => {
         conference,
       });
       storeObserver();
-      conference.startRecording({
-        mode: "FILE",
-      });
+      if (mode === "file") {
+        conference.startRecording({
+          mode: "FILE",
+        });
+      } else if (mode === "stream") {
+        conference.startRecording({
+          mode: "STREAM",
+          streamId: conference.options.name,
+        });
+      }
     }
   };
 
@@ -55,6 +62,9 @@ const setupAutoRecording = (store: any) => {
 export const initAutomations = (store: any) => {
   console.log("PURPIE_MODULE_LOG", "automations initiated");
   if (getHashParam("autoRecording") === "true") {
-    setupAutoRecording(store);
+    setupAutoRecording(store, "file");
+  }
+  if (getHashParam("autoStreaming") === "true") {
+    setupAutoRecording(store, "stream");
   }
 };
