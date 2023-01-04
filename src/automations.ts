@@ -48,7 +48,7 @@ const setupAutoRecording = (store: any, mode: "file" | "stream") => {
       } else if (mode === "stream") {
         conference.startRecording({
           mode: "STREAM",
-          streamId: `${window.location.origin}${window.location.pathname}`,
+          streamId: `rtmp://ingress.purpie.io/live/STREAMKEY?uid=${conference.options.name}`,
         });
       }
     }
