@@ -1,12 +1,10 @@
 import { io } from "socket.io-client";
 
-const PORT = 8081;
-const HOST = "https://purpie.io";
-const url = `${HOST}:${PORT}`;
+const host = "https://purpie.io";
 const jwt = new URLSearchParams(window.location.search).get("jwt")
 const authorization = `Bearer ${jwt}`;
 
-const socket = io(url, {
+const socket = io(host, {
   autoConnect: false,
   withCredentials: true,
   extraHeaders: {
@@ -15,5 +13,3 @@ const socket = io(url, {
 });
 
 export default socket;
-
-
