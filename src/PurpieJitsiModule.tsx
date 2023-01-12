@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { initAutomations } from "./automations";
 import { Mutation, useMutations } from "./mutations";
 
