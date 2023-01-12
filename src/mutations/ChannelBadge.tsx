@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import socket from "../socket";
 
 const data = {
   zoneName: "Test Zone",
@@ -9,7 +10,58 @@ const data = {
   avatarFgColor: "#99FF69",
 };
 
+interface ChannelMeetingInfo {
+  type: "channel";
+  description?: string;
+  channel: {
+    description?: string;
+    name: string;
+    photoURL?: string;
+    public: boolean;
+    zone: {
+      name: string;
+      subdomain: string;
+      public: boolean;
+      photoURL?: string;
+      description?: string;
+    };
+  };
+}
+interface UserMeetingInfo {
+  type: "user";
+  description?: string;
+  user: {
+    fullName: string;
+    email: string;
+    userName: string;
+    photoURL?: string;
+  };
+}
+
 const ChannelBadge = () => {
+  const [meetingInfo, setMeetingInfo] = useState<
+    ChannelMeetingInfo | UserMeetingInfo
+  >();
+
+  useEffect(() => {
+    socket.on("meeting_info", (v) => {
+      setMeetingInfo(v);
+    });
+    socket.connect();
+  }, []);
+
+  useEffect(() => {
+    console.log("meeting info updated", { meetingInfo });
+  }, [meetingInfo]);
+
+  const channelName =
+    meetingInfo?.type === "channel" ? meetingInfo?.channel?.name : null;
+
+  const zoneName =
+    meetingInfo?.type === "channel" ? meetingInfo?.channel?.name : null;
+
+  const photoURL =
+    meetingInfo?.type === "channel" ? meetingInfo?.channel?.photoURL : null;
   return (
     <>
       <div
@@ -23,25 +75,39 @@ const ChannelBadge = () => {
           zIndex: 2,
         }}
       >
-        <div
-          style={{
-            width: "60px",
-            height: "60px",
-            borderRadius: "76px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "24px",
-            fontWeight: "400",
-            backgroundColor: data.avatarBgColor,
-            color: data.avatarFgColor,
-          }}
-        >
-          {data.channelName
-            .split(" ")
-            .map((c) => c[0])
-            .join("")}
-        </div>
+        {photoURL ? (
+          <img
+            style={{
+              objectFit: "contain",
+              width: "60px",
+              height: "60px",
+              borderRadius: "60px",
+            }}
+            src="photoURL"
+            width="60"
+            height="60"
+          ></img>
+        ) : (
+          <div
+            style={{
+              width: "60px",
+              height: "60px",
+              borderRadius: "76px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "24px",
+              fontWeight: "400",
+              backgroundColor: data.avatarBgColor,
+              color: data.avatarFgColor,
+            }}
+          >
+            {data.channelName
+              .split(" ")
+              .map((c) => c[0])
+              .join("")}
+          </div>
+        )}
         <a
           href={data.watermarkHref}
           aria-label={data.watermarkAria}
@@ -58,10 +124,10 @@ const ChannelBadge = () => {
             }}
           >
             <div style={{ fontSize: "24px", color: "white" }}>
-              {data.channelName}
+              {channelName || data.channelName}
             </div>
             <div style={{ fontSize: "16px", color: "#7D4CDB" }}>
-              {data.zoneName}
+              {zoneName || data.zoneName}
             </div>
           </div>
         </a>
