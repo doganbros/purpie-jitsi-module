@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from "react";
 import socket from "../socket";
 
-const data = {
-  zoneName: "Test Zone",
-  channelName: "Test Channel",
-  watermarkHref: "https://doganbros.com",
-  watermarkAria: "Purpie Watermark, Link to the Purpie Test Zone",
-  avatarBgColor: "#966AEA",
-  avatarFgColor: "#99FF69",
-};
-
+const WATERMARK_HREF = "https://purpie.io"
+const WATERMARK_ARIA = "Link to purpie.io"
 interface ChannelMeetingInfo {
   type: "channel";
   description?: string;
@@ -38,7 +31,7 @@ interface UserMeetingInfo {
   };
 }
 
-const ChannelBadge = () => {
+const MeetingBadge = () => {
   const [meetingInfo, setMeetingInfo] = useState<
     ChannelMeetingInfo | UserMeetingInfo
   >();
@@ -54,14 +47,26 @@ const ChannelBadge = () => {
     console.log("meeting info updated", { meetingInfo });
   }, [meetingInfo]);
 
-  const channelName =
-    meetingInfo?.type === "channel" ? meetingInfo?.channel?.name : null;
+  const title =
+    meetingInfo?.type === "channel"
+      ? `◉ ${meetingInfo?.channel?.name}`
+      : meetingInfo?.type === "user"
+      ? meetingInfo.user.fullName
+      : null;
 
-  const zoneName =
-    meetingInfo?.type === "channel" ? meetingInfo?.channel?.name : null;
+  const subtitle =
+    meetingInfo?.type === "channel"
+      ? `▣ ${meetingInfo?.channel?.zone?.name}`
+      : meetingInfo?.type === "user"
+      ? `@${meetingInfo.user.userName}`
+      : null;
 
   const photoURL =
-    meetingInfo?.type === "channel" ? meetingInfo?.channel?.photoURL : null;
+    meetingInfo?.type === "channel"
+      ? meetingInfo?.channel?.photoURL
+      : meetingInfo?.type === "user"
+      ? meetingInfo.user.photoURL
+      : null;
   return (
     <>
       <div
@@ -83,7 +88,7 @@ const ChannelBadge = () => {
               height: "60px",
               borderRadius: "60px",
             }}
-            src="photoURL"
+            src={photoURL}
             width="60"
             height="60"
           ></img>
@@ -98,19 +103,21 @@ const ChannelBadge = () => {
               justifyContent: "center",
               fontSize: "24px",
               fontWeight: "400",
-              backgroundColor: data.avatarBgColor,
-              color: data.avatarFgColor,
+              backgroundColor: "#966AEA",
+              color: "#99FF69",
             }}
           >
-            {data.channelName
+            {title
+              ?.replace(/[^a-zA-Z0-9 ]/g, "")
               .split(" ")
-              .map((c) => c[0])
+              .filter((_v, i: number) => i < 2)
+              .map((v) => v && v[0].toUpperCase())
               .join("")}
           </div>
         )}
         <a
-          href={data.watermarkHref}
-          aria-label={data.watermarkAria}
+          href={WATERMARK_HREF}
+          aria-label={WATERMARK_ARIA}
           style={{ display: "flex", textDecoration: "none" }}
         >
           <div
@@ -124,10 +131,10 @@ const ChannelBadge = () => {
             }}
           >
             <div style={{ fontSize: "24px", color: "white" }}>
-              {channelName || data.channelName}
+              {title}
             </div>
             <div style={{ fontSize: "16px", color: "#7D4CDB" }}>
-              {zoneName || data.zoneName}
+              {subtitle}
             </div>
           </div>
         </a>
@@ -136,4 +143,4 @@ const ChannelBadge = () => {
   );
 };
 
-export default ChannelBadge;
+export default MeetingBadge;

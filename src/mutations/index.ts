@@ -3,7 +3,7 @@ import {
   ReactElement,
 } from "react";
 import ReactDOM from "react-dom";
-import ChannelBadge from "./ChannelBadge";
+import MeetingBadge from "./MeetingBadge";
 import PurpieLogo from "./PurpieLogo";
 
 export interface Mutation {
@@ -33,7 +33,7 @@ export const useMutations = ({ store }: UseMutationsProps): Mutation[] => {
       mountCallback: (e) => {
         replaceNodeWithReactComponent(
           e[0] as HTMLElement,
-          createElement(ChannelBadge)
+          createElement(MeetingBadge)
         );
       },
     },
