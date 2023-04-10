@@ -1,50 +1,16 @@
-import React, { useEffect, useState } from "react";
-import socket from "../socket";
+import React, { useEffect } from "react";
+import { Provider, useSelector } from "react-redux";
+import { RootState, store } from "../store";
 
-const WATERMARK_HREF = "https://purpie.io"
-const WATERMARK_ARIA = "Link to purpie.io"
-interface ChannelMeetingInfo {
-  type: "channel";
-  description?: string;
-  channel: {
-    description?: string;
-    name: string;
-    photoURL?: string;
-    public: boolean;
-    zone: {
-      name: string;
-      subdomain: string;
-      public: boolean;
-      photoURL?: string;
-      description?: string;
-    };
-  };
-}
-interface UserMeetingInfo {
-  type: "user";
-  description?: string;
-  user: {
-    fullName: string;
-    email: string;
-    userName: string;
-    photoURL?: string;
-  };
-}
+const WATERMARK_HREF = "https://purpie.io";
+const WATERMARK_ARIA = "Link to purpie.io";
 
 const MeetingBadge = () => {
-  const [meetingInfo, setMeetingInfo] = useState<
-    ChannelMeetingInfo | UserMeetingInfo
-  >();
-
+  const meetingInfo = useSelector(
+    (state: RootState) => state.socket.meetingInfo
+  );
   useEffect(() => {
-    socket.on("meeting_info", (v) => {
-      setMeetingInfo(v);
-    });
-    socket.connect();
-  }, []);
-
-  useEffect(() => {
-    console.log("meeting info updated", { meetingInfo });
+    console.log("meeting info updated", { meetingInfo, store });
   }, [meetingInfo]);
 
   const title =
@@ -93,27 +59,29 @@ const MeetingBadge = () => {
             height="60"
           ></img>
         ) : (
-          <div
-            style={{
-              width: "60px",
-              height: "60px",
-              borderRadius: "76px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "24px",
-              fontWeight: "400",
-              backgroundColor: "#966AEA",
-              color: "#99FF69",
-            }}
-          >
-            {title
-              ?.replace(/[^a-zA-Z0-9 ]/g, "")
-              .split(" ")
-              .filter((_v, i: number) => i < 2)
-              .map((v) => v && v[0].toUpperCase())
-              .join("")}
-          </div>
+          title && (
+            <div
+              style={{
+                width: "60px",
+                height: "60px",
+                borderRadius: "76px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "24px",
+                fontWeight: "400",
+                backgroundColor: "#966AEA",
+                color: "#99FF69",
+              }}
+            >
+              {title
+                ?.replace(/[^a-zA-Z0-9 ]/g, "")
+                .split(" ")
+                .filter((_v, i: number) => i < 2)
+                .map((v) => v && v[0].toUpperCase())
+                .join("")}
+            </div>
+          )
         )}
         <a
           href={WATERMARK_HREF}
@@ -130,12 +98,8 @@ const MeetingBadge = () => {
               justifyContent: "center",
             }}
           >
-            <div style={{ fontSize: "24px", color: "white" }}>
-              {title}
-            </div>
-            <div style={{ fontSize: "16px", color: "#7D4CDB" }}>
-              {subtitle}
-            </div>
+            <div style={{ fontSize: "24px", color: "white" }}>{title}</div>
+            <div style={{ fontSize: "16px", color: "#7D4CDB" }}>{subtitle}</div>
           </div>
         </a>
       </div>
@@ -143,4 +107,8 @@ const MeetingBadge = () => {
   );
 };
 
-export default MeetingBadge;
+export default () => (
+  <Provider store={store}>
+    <MeetingBadge />
+  </Provider>
+);

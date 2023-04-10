@@ -1,7 +1,4 @@
-import {
-  createElement,
-  ReactElement,
-} from "react";
+import { createElement, ReactElement } from "react";
 import ReactDOM from "react-dom";
 import MeetingBadge from "./MeetingBadge";
 import PurpieLogo from "./PurpieLogo";
@@ -40,12 +37,9 @@ export const useMutations = ({ store }: UseMutationsProps): Mutation[] => {
     {
       selector: "#videospace",
       mountCallback: (e) => {
-        var container = document.createElement("div")
-        e[0].appendChild(container)
-        replaceNodeWithReactComponent(
-          container,
-          createElement(PurpieLogo)
-        );
+        var container = document.createElement("div");
+        e[0].appendChild(container);
+        replaceNodeWithReactComponent(container, createElement(PurpieLogo));
       },
     },
   ];
