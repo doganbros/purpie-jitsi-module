@@ -9,9 +9,6 @@ const MeetingBadge = () => {
   const meetingInfo = useSelector(
     (state: RootState) => state.meeting.meetingInfo
   );
-  useEffect(() => {
-    console.log("meeting info updated", { meetingInfo, store });
-  }, [meetingInfo]);
 
   const title =
     meetingInfo?.type === "channel"
