@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-
 export interface ChannelMeetingInfo {
   type: "channel";
   description?: string;
@@ -33,8 +32,8 @@ export interface UserMeetingInfo {
 
 export interface MeetingState {
   meetingInfo: null | ChannelMeetingInfo | UserMeetingInfo;
-  isStreaming: Boolean,
-  isRecording: Boolean,
+  isStreaming: Boolean;
+  isRecording: Boolean;
 }
 
 const initialState: MeetingState = {
@@ -53,9 +52,27 @@ export const meetingSlice = createSlice({
     ) => {
       state.meetingInfo = action.payload;
     },
+    startStreaming: (state) => {
+      state.isStreaming = true;
+    },
+    stopStreaming: (state) => {
+      state.isStreaming = false;
+    },
+    startRecording: (state) => {
+      state.isRecording = true;
+    },
+    stopRecording: (state) => {
+      state.isRecording = false;
+    },
   },
 });
 
-export const { setMeetingInfo } = meetingSlice.actions;
+export const {
+  setMeetingInfo,
+  startStreaming,
+  stopStreaming,
+  startRecording,
+  stopRecording,
+} = meetingSlice.actions;
 
 export default meetingSlice.reducer;

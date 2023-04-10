@@ -2,6 +2,8 @@ import { createElement, ReactElement } from "react";
 import ReactDOM from "react-dom";
 import MeetingBadge from "./MeetingBadge";
 import PurpieLogo from "./PurpieLogo";
+import ToggleRecording from "./ToggleRecording";
+import ToggleStreaming from "./ToggleStreaming";
 
 export interface Mutation {
   selector: string;
@@ -37,9 +39,40 @@ export const useMutations = ({ store }: UseMutationsProps): Mutation[] => {
     {
       selector: "#videospace",
       mountCallback: (e) => {
-        var container = document.createElement("div");
+        const container = document.createElement("div");
         e[0].appendChild(container);
         replaceNodeWithReactComponent(container, createElement(PurpieLogo));
+      },
+    },
+    {
+      selector:
+        '[aria-label="More actions menu"] [aria-label="Toggle recording"]',
+      mountCallback: (e) => {
+        const el = e[0] as HTMLElement;
+        const copy = el.cloneNode(true) as HTMLElement;
+        copy.ariaLabel = "Toggle meeting recording";
+        el.parentNode?.replaceChild(copy, el);
+        const container = document.createElement("div");
+        el.parentNode?.appendChild(container);
+        replaceNodeWithReactComponent(
+          container,
+          createElement(ToggleRecording, { el: copy })
+        );
+      },
+    },
+    {
+      selector: '[aria-label="More actions menu"] [aria-label="Live Stream"]',
+      mountCallback: (e) => {
+        const el = e[0] as HTMLElement;
+        const copy = el.cloneNode(true) as HTMLElement;
+        copy.ariaLabel = "Live Stream Meeting";
+        el.parentNode?.replaceChild(copy, el);
+        const container = document.createElement("div");
+        el.parentNode?.appendChild(container);
+        replaceNodeWithReactComponent(
+          container,
+          createElement(ToggleStreaming, { el: copy })
+        );
       },
     },
   ];

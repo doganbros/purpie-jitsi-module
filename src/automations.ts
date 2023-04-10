@@ -1,3 +1,6 @@
+import { store } from "./store";
+import { startRecording, startStreaming } from "./store/meeting";
+
 const getHashParam = (param: string) => {
   try {
     const hash = window.location.hash;
@@ -16,12 +19,12 @@ const getHashParam = (param: string) => {
   }
 };
 
-const setupAutoRecording = (store: any, mode: "file" | "stream") => {
+const setupAutoRecording = (JitsiStore: any, mode: "file" | "stream") => {
   let storeObserver: any;
 
   const tryGetConference = () => {
     try {
-      return store.getState()["features/base/conference"].conference;
+      return JitsiStore.getState()["features/base/conference"].conference;
     } catch {
       return undefined;
     }
@@ -30,30 +33,33 @@ const setupAutoRecording = (store: any, mode: "file" | "stream") => {
   const handleAutoRecording = () => {
     const conference = tryGetConference();
     if (conference) {
+      // Unsubscribe
       storeObserver();
       if (mode === "file") {
         conference.startRecording({
           mode: "FILE",
         });
+        store.dispatch(startRecording());
       } else if (mode === "stream") {
         // TODO pass purpie user id as uid
-        const uid = null
+        const uid = null;
         conference.startRecording({
           mode: "STREAM",
           streamId: `rtmp://ingress.purpie.io/live/${conference.options.name}?uid=${uid}`,
         });
+        store.dispatch(startStreaming());
       }
     }
   };
 
-  storeObserver = store.subscribe(handleAutoRecording);
+  storeObserver = JitsiStore.subscribe(handleAutoRecording);
 };
 
-export const initAutomations = (store: any) => {
+export const initAutomations = (JitsiStore: any) => {
   if (getHashParam("autoRecording") === "true") {
-    setupAutoRecording(store, "file");
+    setupAutoRecording(JitsiStore, "file");
   }
   if (getHashParam("autoStreaming") === "true") {
-    setupAutoRecording(store, "stream");
+    setupAutoRecording(JitsiStore, "stream");
   }
 };
