@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import socketReducer from "./socket";
+import meetingReducer from './meeting';
 
 export const store = configureStore({
   reducer: {
-    socket: socketReducer,
+    meeting: meetingReducer,
   },
 });
 

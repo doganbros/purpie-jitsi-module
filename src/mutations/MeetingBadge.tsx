@@ -7,7 +7,7 @@ const WATERMARK_ARIA = "Link to purpie.io";
 
 const MeetingBadge = () => {
   const meetingInfo = useSelector(
-    (state: RootState) => state.socket.meetingInfo
+    (state: RootState) => state.meeting.meetingInfo
   );
   useEffect(() => {
     console.log("meeting info updated", { meetingInfo, store });

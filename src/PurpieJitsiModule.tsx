@@ -1,6 +1,8 @@
 import { FC, useEffect } from "react";
 import { initAutomations } from "./automations";
+
 import { Mutation, useMutations } from "./mutations";
+import { initSocket } from "./socket";
 
 /*
   This function is used instead of querySelectorAll because
@@ -61,6 +63,7 @@ const PurpieJitsiModule: FC<{ store: any }> = ({ store }) => {
       childList: true,
     });
     initAutomations(store);
+    initSocket();
     return () => {
       domObserver.disconnect();
     };
