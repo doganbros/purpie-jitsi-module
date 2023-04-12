@@ -56,7 +56,7 @@ export const useMutations = ({ store }: UseMutationsProps): Mutation[] => {
         el.parentNode?.appendChild(container);
         replaceNodeWithReactComponent(
           container,
-          createElement(ToggleRecording, { el: copy })
+          createElement(ToggleRecording, { el: copy, JitsiStore: store })
         );
       },
     },
@@ -71,7 +71,7 @@ export const useMutations = ({ store }: UseMutationsProps): Mutation[] => {
         el.parentNode?.appendChild(container);
         replaceNodeWithReactComponent(
           container,
-          createElement(ToggleStreaming, { el: copy })
+          createElement(ToggleStreaming, { el: copy, JitsiStore: store })
         );
       },
     },

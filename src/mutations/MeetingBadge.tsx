@@ -30,6 +30,7 @@ const MeetingBadge = () => {
       : meetingInfo?.type === "user"
       ? meetingInfo.user.photoURL
       : null;
+
   return (
     <>
       <div

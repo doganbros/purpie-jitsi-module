@@ -27,19 +27,16 @@ export interface UserMeetingInfo {
     email: string;
     userName: string;
     photoURL?: string;
+    id: string;
   };
 }
 
 export interface MeetingState {
   meetingInfo: null | ChannelMeetingInfo | UserMeetingInfo;
-  isStreaming: Boolean;
-  isRecording: Boolean;
 }
 
-const initialState: MeetingState = {
+export const initialState: MeetingState = {
   meetingInfo: null,
-  isStreaming: false,
-  isRecording: false,
 };
 
 export const meetingSlice = createSlice({
@@ -52,27 +49,9 @@ export const meetingSlice = createSlice({
     ) => {
       state.meetingInfo = action.payload;
     },
-    startStreaming: (state) => {
-      state.isStreaming = true;
-    },
-    stopStreaming: (state) => {
-      state.isStreaming = false;
-    },
-    startRecording: (state) => {
-      state.isRecording = true;
-    },
-    stopRecording: (state) => {
-      state.isRecording = false;
-    },
   },
 });
 
-export const {
-  setMeetingInfo,
-  startStreaming,
-  stopStreaming,
-  startRecording,
-  stopRecording,
-} = meetingSlice.actions;
+export const { setMeetingInfo } = meetingSlice.actions;
 
 export default meetingSlice.reducer;

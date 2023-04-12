@@ -1,17 +1,39 @@
 import React, { useEffect } from "react";
-import { RootState, store } from "../store";
-import { Provider, useSelector } from "react-redux";
+import {
+  jitsiStoreContext,
+  moduleStoreContext,
+  store as ModuleStore,
+  useJitsiSelector,
+} from "../store";
+import { Provider } from "react-redux";
 
 interface ToggleRecordingProps {
   el: HTMLElement;
+  JitsiStore: any;
 }
 
-function ToggleRecording({ el }: ToggleRecordingProps) {
-  const { isRecording } = useSelector((state: RootState) => state.meeting);
+function ToggleRecording({ el }: Omit<ToggleRecordingProps, "JitsiStore">) {
+  const sessionId = useJitsiSelector(
+    (state: any) =>
+      state["features/recording"]?.sessionDatas?.find(
+        (v: any) => v.mode?.toLowerCase() === "file"
+      )?.id
+  );
+  const isRecording = Boolean(sessionId);
+
+  const conference = useJitsiSelector(
+    (state: any) => state["features/base/conference"].conference
+  );
 
   useEffect(() => {
     const clickListener = () => {
-      alert(isRecording ? "It is recording" : "Not recording");
+      if (isRecording && conference.stopRecording) {
+        conference.stopRecording(sessionId);
+      }
+      if (!isRecording && conference.startRecording)
+        conference.startRecording({
+          mode: "FILE",
+        });
     };
     el.addEventListener("click", clickListener);
     return () => {
@@ -28,9 +50,10 @@ function ToggleRecording({ el }: ToggleRecordingProps) {
 
   return null;
 }
-
-export default (props: ToggleRecordingProps) => (
-  <Provider store={store}>
-    <ToggleRecording {...props} />
+export default ({ JitsiStore, ...props }: ToggleRecordingProps) => (
+  <Provider store={ModuleStore} context={moduleStoreContext}>
+    <Provider store={JitsiStore} context={jitsiStoreContext}>
+      <ToggleRecording {...props} />
+    </Provider>
   </Provider>
 );

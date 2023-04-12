@@ -16,7 +16,6 @@ export const socket = io(host, {
 
 export const initSocket = () => {
   socket.on("meeting_info", (v) => {
-    console.log("MODULE_LOG", { store, setMeetingInfo, meetingInfo: v });
     store.dispatch(setMeetingInfo(v));
   });
 

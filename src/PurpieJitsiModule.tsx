@@ -51,7 +51,7 @@ const filterRecord = (
 };
 
 const PurpieJitsiModule: FC<{ store: any }> = ({ store }) => {
-  const mutationList = useMutations(store);
+  const mutationList = useMutations({ store });
   useEffect(() => {
     const domObserver = new MutationObserver((mr) => {
       mutationList.forEach((mutation) => {

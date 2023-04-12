@@ -1,5 +1,4 @@
 import { store } from "./store";
-import { startRecording, startStreaming } from "./store/meeting";
 
 const getHashParam = (param: string) => {
   try {
@@ -39,7 +38,6 @@ const setupAutoRecording = (JitsiStore: any, mode: "file" | "stream") => {
         conference.startRecording({
           mode: "FILE",
         });
-        store.dispatch(startRecording());
       } else if (mode === "stream") {
         // TODO pass purpie user id as uid
         const uid = null;
@@ -47,7 +45,6 @@ const setupAutoRecording = (JitsiStore: any, mode: "file" | "stream") => {
           mode: "STREAM",
           streamId: `rtmp://ingress.purpie.io/live/${conference.options.name}?uid=${uid}`,
         });
-        store.dispatch(startStreaming());
       }
     }
   };
