@@ -21,7 +21,9 @@ function ToggleStreaming({ el }: Omit<ToggleStreamingProps, "JitsiStore">) {
   const sessionId = useJitsiSelector(
     (state: any) =>
       state["features/recording"]?.sessionDatas?.find(
-        (v: any) => v.mode?.toLowerCase() === "stream"
+        (v: any) =>
+          v.mode?.toLowerCase() === "stream" &&
+          (v.status === "on" || v.status === "pending")
       )?.id
   );
   const isStreaming = Boolean(sessionId);

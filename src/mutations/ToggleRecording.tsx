@@ -16,7 +16,9 @@ function ToggleRecording({ el }: Omit<ToggleRecordingProps, "JitsiStore">) {
   const sessionId = useJitsiSelector(
     (state: any) =>
       state["features/recording"]?.sessionDatas?.find(
-        (v: any) => v.mode?.toLowerCase() === "file"
+        (v: any) =>
+          v.mode?.toLowerCase() === "file" &&
+          (v.status === "on" || v.status === "pending")
       )?.id
   );
   const isRecording = Boolean(sessionId);

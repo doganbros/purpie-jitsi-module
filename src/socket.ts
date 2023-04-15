@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 import { setMeetingInfo } from "./store/meeting";
 import { store } from "./store";
 
-const host = "http://localhost:8000";
+const host = "https://purpie.io";
 const jwt = new URLSearchParams(window.location.search).get("jwt");
 const authorization = `Bearer ${jwt}`;
 
