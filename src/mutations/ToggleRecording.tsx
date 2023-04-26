@@ -13,15 +13,24 @@ interface ToggleRecordingProps {
 }
 
 function ToggleRecording({ el }: Omit<ToggleRecordingProps, "JitsiStore">) {
-  const sessionId = useJitsiSelector(
-    (state: any) =>
-      state["features/recording"]?.sessionDatas?.find(
-        (v: any) =>
-          v.mode?.toLowerCase() === "file" &&
-          (v.status === "on" || v.status === "pending")
-      )?.id
+  const sessionDatas = useJitsiSelector(
+    (state: any) => state["features/recording"]?.sessionDatas
   );
+
+  const sessionId = sessionDatas?.find(
+    (v: any) =>
+      v.mode?.toLowerCase() === "file" &&
+      (v.status === "on" || v.status === "pending")
+  )?.id;
+
   const isRecording = Boolean(sessionId);
+  const isStreaming = Boolean(
+    sessionDatas?.find(
+      (v: any) =>
+        v.mode?.toLowerCase() === "stream" &&
+        (v.status === "on" || v.status === "pending")
+    )?.id
+  );
 
   const conference = useJitsiSelector(
     (state: any) => state["features/base/conference"].conference
@@ -49,6 +58,14 @@ function ToggleRecording({ el }: Omit<ToggleRecordingProps, "JitsiStore">) {
       label.innerHTML = isRecording ? "Stop recording" : "Start recording";
     }
   }, [isRecording]);
+
+  useEffect(() => {
+    if (isStreaming) {
+      el.style.display = "none";
+    } else {
+      el.style.display = "flex";
+    }
+  }, [isStreaming]);
 
   return null;
 }

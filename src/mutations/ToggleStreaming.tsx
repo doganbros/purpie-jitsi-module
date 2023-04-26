@@ -18,15 +18,25 @@ function ToggleStreaming({ el }: Omit<ToggleStreamingProps, "JitsiStore">) {
   const { meetingInfo } = useModuleSelector(
     (state: RootState) => state.meeting
   );
-  const sessionId = useJitsiSelector(
-    (state: any) =>
-      state["features/recording"]?.sessionDatas?.find(
-        (v: any) =>
-          v.mode?.toLowerCase() === "stream" &&
-          (v.status === "on" || v.status === "pending")
-      )?.id
+
+  const sessionDatas = useJitsiSelector(
+    (state: any) => state["features/recording"]?.sessionDatas
   );
+
+  const sessionId = sessionDatas?.find(
+    (v: any) =>
+      v.mode?.toLowerCase() === "stream" &&
+      (v.status === "on" || v.status === "pending")
+  )?.id;
+
   const isStreaming = Boolean(sessionId);
+  const isRecording = Boolean(
+    sessionDatas?.find(
+      (v: any) =>
+        v.mode?.toLowerCase() === "file" &&
+        (v.status === "on" || v.status === "pending")
+    )?.id
+  );
 
   const conference = useJitsiSelector(
     (state: any) => state["features/base/conference"].conference
@@ -61,6 +71,14 @@ function ToggleStreaming({ el }: Omit<ToggleStreamingProps, "JitsiStore">) {
       label.innerHTML = isStreaming ? "Stop streaming" : "Start streaming";
     }
   }, [isStreaming]);
+
+  useEffect(() => {
+    if (isRecording) {
+      el.style.display = "none";
+    } else {
+      el.style.display = "flex";
+    }
+  }, [isRecording]);
 
   return null;
 }
