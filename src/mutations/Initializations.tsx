@@ -17,7 +17,7 @@ function Initializations() {
 
     useEffect(() => {
         document.title = "Meeting - Purpie"
-        let link = document.querySelector("link[rel~='icon']");
+        let link: any = document.querySelector("link[rel~='icon']");
         if (!link) {
             link = document.createElement('link');
             link.rel = 'icon';
