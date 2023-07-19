@@ -1,9 +1,10 @@
-import { createElement, ReactElement } from "react";
+import {createElement, Fragment, ReactElement} from "react";
 import ReactDOM from "react-dom";
 import MeetingBadge from "./MeetingBadge";
 import PurpieLogo from "./PurpieLogo";
 import ToggleRecording from "./ToggleRecording";
 import ToggleStreaming from "./ToggleStreaming";
+import Initializations from "./Initializations";
 
 export interface Mutation {
   selector: string;
@@ -41,7 +42,15 @@ export const useMutations = ({ store }: UseMutationsProps): Mutation[] => {
       mountCallback: (e) => {
         const container = document.createElement("div");
         e[0].appendChild(container);
-        replaceNodeWithReactComponent(container, createElement(PurpieLogo));
+        replaceNodeWithReactComponent(
+            container,
+            createElement(
+                Fragment,
+                {},
+                createElement(PurpieLogo),
+                createElement(Initializations,  {JitsiStore: store})
+            )
+        );
       },
     },
     {

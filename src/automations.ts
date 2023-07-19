@@ -1,5 +1,5 @@
 import { store } from "./store";
-
+// TODO Move these to Initializations component
 const getHashParam = (param: string) => {
   try {
     const hash = window.location.hash;
